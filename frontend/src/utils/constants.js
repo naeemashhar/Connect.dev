@@ -1,1 +1,1 @@
-export const BASE_URL = location.hostname === "localhost" ? "http://localhost:3000" : "https://connectdev-be-ye81.onrender.com";
+export const BASE_URL = location.hostname === "localhost" ? "http://localhost:3000" : "https://connect-dev-backend-r8a3.onrender.com";

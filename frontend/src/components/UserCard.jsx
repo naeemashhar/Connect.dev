@@ -84,11 +84,12 @@ const UserCard = ({ user }) => {
   ];
 
   const cardStateClass =
-    hoverAction === "interested"
-      ? "rotate-[3deg] dark:border-green-500 border-green-700 shadow-md dark:shadow-green-500 shadow-green-700"
-      : hoverAction === "ignore"
-      ? "-rotate-[3deg] dark:border-red-500 border-red-700 shadow-md dark:shadow-red-500 shadow-red-700"
-      : "rotate-0 border-cyan-500";
+  hoverAction === "interested"
+    ? "rotate-0 sm:rotate-[3deg] border-green-700 sm:shadow-md sm:dark:shadow-green-500 sm:shadow-green-700 dark:border-green-500"
+    : hoverAction === "ignore"
+    ? "rotate-0 sm:-rotate-[3deg] border-red-700 sm:shadow-md sm:dark:shadow-red-500 sm:shadow-red-700 dark:border-red-500"
+    : "rotate-0 border-cyan-500";
+
 
   return (
     <div

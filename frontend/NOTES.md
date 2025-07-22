@@ -1,0 +1,4 @@
+ - Connect.Dev-FE
+ - daisyUI => component library for tailwind css
+ - to connect backend with frontend we need cors() 
+ -cors contain (origin, credentials) as well as in frontend to when calling axios .

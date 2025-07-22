@@ -1,0 +1,126 @@
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+@layer base{
+  html{
+    @apply transition-colors duration-300;
+  }
+  body{
+    @apply bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100
+  }
+}
+
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities";
+@import "tailwindcss";
+@plugin "daisyui";
+
+@plugin "daisyui/theme" {
+  name: "mytheme";
+  default: true;
+  prefersdark: false;
+  color-scheme: light;
+
+  /* Base background */
+  --color-base-100: #020013;
+  --color-base-200: #090B1D;
+  --color-base-300: #12142A;
+  --color-base-content: #FFFFFF;
+
+  /* Primary (deep black) */
+  --color-primary: #020013;
+  --color-primary-content: #FFFFFF;
+
+  /* Secondary (gold) */
+  --color-secondary: #FFBE53;
+  --color-secondary-content: #020013;
+
+  /* Accent (blue) */
+  --color-accent: #51BAFF;
+  --color-accent-content: #020013;
+
+  /* Neutral / Footer */
+  --color-neutral: #090B1D;
+  --color-neutral-content: #D9DFF2;
+
+  /* Info / Success / Warning / Error (optional, matches palette) */
+  --color-info: #51BAFF;
+  --color-info-content: #FFFFFF;
+
+  --color-success: #00D09C;
+  --color-success-content: #FFFFFF;
+
+  --color-warning: #FFBE53;
+  --color-warning-content: #020013;
+
+  --color-error: #F87272;
+  --color-error-content: #FFFFFF;
+
+  /* Radius, sizes, effects (optional but good defaults) */
+  --radius-box: 0.5rem;
+  --radius-field: 0.25rem;
+  --radius-selector: 0.75rem;
+
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
+
+@plugin "daisyui/theme" {
+  name: "mytheme-light";
+  default: false;
+  prefersdark: false;
+  color-scheme: light;
+
+  /* Soft beige background matching image */
+  --color-base-100: #FDF9F2;       /* full background */
+  --color-base-200: #F4EFE7;       /* card base */
+  --color-base-300: #E5E1D7;       /* subtle borders */
+  --color-base-content: #1E1E1E;   /* dark readable text */
+
+  /* Primary: soft near-black for contrast */
+  --color-primary: #1A1A1A;
+  --color-primary-content: #FFFFFF;
+
+  /* Secondary: your branding gold */
+  --color-secondary: #FFBE53;
+  --color-secondary-content: #1A1A1A;
+
+  /* Accent: your branding blue */
+  --color-accent: #51BAFF;
+  --color-accent-content: #1A1A1A;
+
+  /* Neutral (UI elements, modals) */
+  --color-neutral: #E5E1D7;
+  --color-neutral-content: #1A1A1A;
+
+  /* Status colors (optional) */
+  --color-info: #51BAFF;
+  --color-info-content: #1A1A1A;
+
+  --color-success: #00D09C;
+  --color-success-content: #FFFFFF;
+
+  --color-warning: #FFBE53;
+  --color-warning-content: #1A1A1A;
+
+  --color-error: #F87272;
+  --color-error-content: #FFFFFF;
+
+  /* Radius / size / effects (keep consistent with dark) */
+  --radius-box: 0.5rem;
+  --radius-field: 0.25rem;
+  --radius-selector: 0.75rem;
+
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
+
+
+
+

@@ -103,6 +103,9 @@ const SignUp = () => {
     }
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+
+
   return (
     <section className="min-h-screen bg-gradient-to-br from-[#dfe0e3] via-[#ffffff] to-[#c9ccd0] dark:from-[#020013] dark:via-gray-900/5 dark:to-[#020013] px-4 py-12 flex justify-center">
       <button
@@ -160,18 +163,31 @@ const SignUp = () => {
           required
         />
 
-        <input
-          type="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={(e) =>
-            setFormData({ ...formData, password: e.target.value })
-          }
-          className="input input-bordered w-full 
-    bg-[#F2F7FE] text-[#021431] placeholder:text-[#555] 
-    dark:bg-[#1a1a2e] dark:text-white dark:placeholder:text-gray-400"
-          required
-        />
+        <div className="relative">
+  <input
+    type={showPassword ? "text" : "password"}
+    placeholder="Password"
+    value={formData.password}
+    onChange={(e) =>
+      setFormData({ ...formData, password: e.target.value })
+    }
+    className="input input-bordered w-full pr-10
+      bg-[#F2F7FE] text-[#021431] placeholder:text-[#555] 
+      dark:bg-[#1a1a2e] dark:text-white dark:placeholder:text-gray-400"
+    required
+  />
+  <span
+    className="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-500 dark:text-gray-300"
+    onClick={() => setShowPassword(!showPassword)}
+  >
+    {showPassword ? (
+      <i className="ri-eye-off-line text-lg" />
+    ) : (
+      <i className="ri-eye-line text-lg" />
+    )}
+  </span>
+</div>
+
 
         <input
           type="text"

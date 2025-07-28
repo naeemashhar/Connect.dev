@@ -52,6 +52,8 @@ const Login = () => {
     // Add other background styles as needed
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+
   return (
     <div
       className="min-h-screen flex items-center justify-center px-4 bg-center bg-no-repeat bg-cover"
@@ -114,15 +116,27 @@ const Login = () => {
                 Forgot your password?
               </a>
             </div>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="mt-1 w-full px-4 py-2 bg-[#E3E9F4] dark:bg-base-200 rounded-md placeholder:text-[#6B7280] text-[#021431] dark:text-white"
-              placeholder="••••••••"
-            />
+            <div className="relative">
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="mt-1 w-full px-4 py-2 bg-[#E3E9F4] dark:bg-base-200 rounded-md placeholder:text-[#6B7280] text-[#021431] dark:text-white pr-10"
+                placeholder="••••••••"
+              />
+              <span
+                className="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-500 dark:text-gray-300"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <i className="ri-eye-off-line text-lg" />
+                ) : (
+                  <i className="ri-eye-line text-lg" />
+                )}
+              </span>
+            </div>
           </div>
 
           <p className="text-sm text-red-500">{error}</p>

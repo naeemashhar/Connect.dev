@@ -97,6 +97,8 @@ const Requests = () => {
             {requests.map((request) => {
               const user = request.fromUserId;
 
+              if(!user) return null;
+
               return (
                 <div
                   key={request._id}

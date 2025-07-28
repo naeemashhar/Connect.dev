@@ -147,28 +147,8 @@ const Login = () => {
             Log in
           </button>
         </form>
-
-        <div className="flex items-center justify-center space-x-2">
-          <span className="border-b w-1/5 border-[#021431] dark:border-gray-300"></span>
-          <span className="text-md dark:text-gray-300 text-[#021431]">
-            or continue with
-          </span>
-          <span className="border-b w-1/5 border-[#021431] dark:border-gray-300"></span>
-        </div>
-
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-3 sm:gap-4 w-full px-4">
-          {/* Google Button */}
-          <button className="flex items-center justify-center w-full sm:w-[50%] h-10 px-4 py-2 rounded-md cursor-pointer border border-gray-400 bg-white text-black hover:dark:bg-cyan-400 hover:bg-[#E3E9F4] transition text-sm sm:text-base dark:border-gray-800 dark:bg-base-200 dark:text-white">
-            <i className="ri-google-fill mr-2 text-lg"></i>
-            Log in with Google
-          </button>
-
-          {/* GitHub Button */}
-          <button className="flex items-center justify-center w-full sm:w-[50%] h-10 px-4 py-2 rounded-md cursor-pointer border border-[#B0B8C1] text-[#021431] hover:dark:bg-cyan-400 hover:bg-[#E3E9F4] transition text-sm sm:text-base dark:border-gray-800 dark:bg-base-200 dark:text-white">
-            <i className="ri-github-fill mr-2 text-lg"></i>
-            Log in with Github
-          </button>
-        </div>
+        
+       
 
         <p className="text-center text-md dark:text-gray-300 text-[#021431]">
           Are you new here?{" "}

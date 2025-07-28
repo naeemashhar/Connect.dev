@@ -109,12 +109,7 @@ const Login = () => {
               >
                 Password
               </label>
-              <a
-                href="#"
-                className="text-sm text-semibold text-[#0069FF] dark:text-cyan-500 hover:underline"
-              >
-                Forgot your password?
-              </a>
+              
             </div>
             <div className="relative">
               <input

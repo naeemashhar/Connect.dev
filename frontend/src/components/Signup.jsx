@@ -50,8 +50,8 @@ const SignUp = () => {
   };
 
   const validate = () => {
-    if (!formData.firstName || formData.firstName.trim().length < 4)
-      return "First name must be at least 4 characters.";
+    if (!formData.firstName || formData.firstName.trim().length < 3)
+      return "First name must be at least 3 characters.";
     if (!/\S+@\S+\.\S+/.test(formData.emailId)) return "Invalid email format.";
     if (
       !formData.password ||

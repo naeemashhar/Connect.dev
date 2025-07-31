@@ -59,7 +59,7 @@
         }
 
 
-# Addding a custom Domain name
+# Adding a custom Domain name
 
     - purchased domain name from godaddy
     - signup on cloudflare & add a new domain name
@@ -67,3 +67,33 @@
     - wait for sometime till your nameservers are updated ~15 minutes
     - DNS record: A devtinder.in 43.204.96.49
     - Enable SSL for website (secure-website)
+
+
+# Sending Emails via SES
+
+    - Create a IAM user
+    - Give Access to AmazonSESFullAccess
+    - Amazon SES: Create an Identity
+    - Verify your domain name
+    - Verify an email address identity
+    - Install AWS SDK - v3 
+    - Code Example https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/javascriptv3/example_code/ses#code-examples
+    - Setup SesClient
+    - Access Credentials should be created in IAm under SecurityCredentials Tab
+    - Add the credentials to the env file
+    - Write code for SESClient
+    - Write code for Sending email address
+    - Make the email dynamic by passing more params to the run function
+
+
+# Scheduling cron jobs in NodeJS
+    - Installing node-cron
+    - Learning about cron expressions syntax - crontab.guru
+    - Schedule a job
+    - date-fns
+    - Find all the unique  email Id who have got connection Request in previous day
+    - Send Email
+    - Explore queue mechanim to send bulk emails
+    - Amazon SES Bulk Emails
+    - Make sendEmail function dynamic
+    - bee-queue & bull npm packages

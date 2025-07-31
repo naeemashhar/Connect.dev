@@ -57,11 +57,12 @@ connectionRouter.post(
       const data = await connectionRequest.save(); //this is where pre-save middleware is called
 
       const emailResponse = await sendEmail.run(
-        req.user.firstName +
-          " has " +
-          (status === "interested" ? "expressed interest in " : status + " ") +
-          toUser.firstName
+        "New Connection Request",
+        `${req.user.firstName} has ${
+          status === "interested" ? "expressed interest in" : status
+        } ${toUser.firstName}`
       );
+
       console.log(emailResponse);
       res.json({
         message:

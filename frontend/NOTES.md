@@ -33,3 +33,37 @@
    IMP  - config nginx - /etc/nginx/sites-available/default
    IMP  - restart nginx - sudo systemctl restart nginx
         - Modify the BASEURL in frontend project to "/api"
+
+        
+# Ngxinx config: 
+
+        Frontend = http://43.204.96.49/
+        Backend = http://43.204.96.49:7777/
+    
+        Domain name = devtinder.com => 43.204.96.49
+
+        Frontend = devtinder.com
+        Backend = devtinder.com:7777 => devtinder.com/api
+
+        nginx config : 
+
+        server_name 43.204.96.49;
+
+        location /api/ {
+            proxy_pass http://localhost:7777/;  # Pass the request to the Node.js app
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
+        }
+
+
+# Addding a custom Domain name
+
+    - purchased domain name from godaddy
+    - signup on cloudflare & add a new domain name
+    - change the nameservers on godaddy and point it to cloudflare
+    - wait for sometime till your nameservers are updated ~15 minutes
+    - DNS record: A devtinder.in 43.204.96.49
+    - Enable SSL for website (secure-website)

@@ -124,7 +124,7 @@ const EditProfile = ({ user }) => {
         Back
       </button>
 
-      <form className="w-full max-w-2xl bg-white/40 dark:bg-transparent backdrop-blur-md p-8 rounded-3xl border border-[#C9D6F2] dark:border-white/10 shadow-lg space-y-6 text-[#021431] dark:text-white mt-12 lg:mt-0">
+      <form className="w-full max-w-2xl bg-white/40 dark:bg-transparent backdrop-blur-sm p-8 rounded-3xl border border-[#C9D6F2] dark:border-white/10 shadow-lg space-y-6 text-[#021431] dark:text-white mt-12 lg:mt-0">
         <h2 className="text-2xl font-semibold text-center">
           Edit Your Profile
         </h2>

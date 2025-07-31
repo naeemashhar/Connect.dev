@@ -5,6 +5,8 @@ const { userAuth } = require("../middlewares/auth");
 const ConnectionRequest = require("../models/connectionRequest");
 const User = require("../models/user");
 
+const sendEmail = require("../utils/sendEmail");
+
 //to send connection
 connectionRouter.post(
   "/request/send/:status/:toUserId",
@@ -54,6 +56,13 @@ connectionRouter.post(
 
       const data = await connectionRequest.save(); //this is where pre-save middleware is called
 
+      const emailResponse = await sendEmail.run(
+        req.user.firstName +
+          " has " +
+          (status === "interested" ? "expressed interest in " : status + " ") +
+          toUser.firstName
+      );
+      console.log(emailResponse);
       res.json({
         message:
           req.user.firstName +
@@ -116,13 +125,10 @@ connectionRouter.post(
       responseMessage = "User rejected the request";
 
       return res.json({ message: responseMessage });
-
     } catch (error) {
       res.status(400).send("ERROR: " + error.message);
     }
   }
 );
-
-
 
 module.exports = connectionRouter;

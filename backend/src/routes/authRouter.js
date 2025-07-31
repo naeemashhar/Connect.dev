@@ -91,9 +91,10 @@ authRouter.post("/login", async (req, res) => {
 authRouter.post("/logout", async (req, res) => {
   res.cookie("token", "", {
     httpOnly: true,
-    secure: true,
-    sameSite: "None",
+    secure: false,      // 🔁 same as login
+    sameSite: "Lax",    // 🔁 same as login
     expires: new Date(0),
+    path: "/",          // ✅ important to target the right cookie
   });
   res.send("Logout Successful !!!");
 });

@@ -1,1 +1,1 @@
-export const BASE_URL ="https://connect-dev-backend-r8a3.onrender.com"
+export const BASE_URL ="/api"

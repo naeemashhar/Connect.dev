@@ -25,11 +25,11 @@
     
     - Backend
         - updated DB password
-        - allowed ec2 instance public IP on mongodb server
+        - allowed ec2 instance public IP on mongodb server(0.0.0.0/0)
         - npm intsall pm2 -g
-        - pm2 start npm --name "devTinder-backend" -- start
-        - pm2 logs
-        - pm2 list, pm2 flush <name> , pm2 stop <name>, pm2 delete <name>
-        - config nginx - /etc/nginx/sites-available/default
-        - restart nginx - sudo systemctl restart nginx
+        - pm2 start npm --name "Connect.dev-backend" -- start
+        - pm2 logs(to check if some error occurs)
+        - pm2 list, pm2 flush <name> (to clear logs) , pm2 stop <name>, pm2 delete <name>
+   IMP  - config nginx - /etc/nginx/sites-available/default
+   IMP  - restart nginx - sudo systemctl restart nginx
         - Modify the BASEURL in frontend project to "/api"

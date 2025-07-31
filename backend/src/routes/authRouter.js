@@ -74,8 +74,8 @@ authRouter.post("/login", async (req, res) => {
       //ADDING token to the cookie and send response back to the user.
       res.cookie("token", token, {
         httpOnly: true, // ✅ Prevents access from JavaScript (security)
-        secure: true, // ✅ Required for HTTPS (Render uses HTTPS)
-        sameSite: "None", // ✅ Required for cross-site cookies
+        secure: false, // ✅ Required for HTTPS (Render uses HTTPS)
+        sameSite: "Lax", // ✅ Required for cross-site cookies
         expires: new Date(Date.now() + 8 * 3600000), // 8 hours
       });
 

@@ -13,9 +13,8 @@ const profileRouter = require("./routes/profileRouter");
 const connectionRouter = require("./routes/connectionRouter"); 
 const userRouter = require("./routes/userRouter");
 
-const allowedOrigin = process.env.FRONTEND_URL;
 app.use(cors({
-  origin :allowedOrigin,
+  origin :"http://localhost:5173",
   credentials: true,
 }));
 app.use(cookieParser()); // Middleware to parse cookies from the request

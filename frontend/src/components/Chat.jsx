@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { createSocketConnection } from "../utils/socket";
 import { useSelector } from "react-redux";
+import axios from "axios";
+import { BASE_URL } from "../utils/constants";
 
 const Chat = () => {
   const { targetUserId } = useParams();
@@ -10,6 +12,25 @@ const Chat = () => {
   const userId = user?._id;
   const [newMessage, setNewMessage] = useState("");
 
+  const fetchChatMessages = async () => {
+    const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, {
+      withCredentials: true,
+    });
+
+    const chatMessages = chat?.data?.messages.map((msg) => {
+      const {senderId, text} = msg;
+      return {
+        firstName: senderId?.firstName,
+        lastName: senderId?.lastName,
+        text: msg?.text,
+      };
+    });
+    setMessages(chatMessages)
+  };
+  useEffect(() => {
+    fetchChatMessages();
+  });
+
   useEffect(() => {
     if (!userId) {
       return;
@@ -17,13 +38,14 @@ const Chat = () => {
     const socket = createSocketConnection();
     socket.emit("joinChat", {
       firstName: user.firstName,
+      lastName:user.lastName,
       userId,
       targetUserId,
     });
 
-    socket.on("messageReceived", ({firstName, text}) =>{
-      setMessages(messages => [...messages, {firstName, text}])
-    })
+    socket.on("messageReceived", ({ firstName,lastName, text }) => {
+      setMessages((messages) => [...messages, { firstName,lastName, text }]);
+    });
 
     //disconnecting web-socket.io whenever unload
     return () => {
@@ -35,12 +57,14 @@ const Chat = () => {
     const socket = createSocketConnection();
     socket.emit("sendMessage", {
       firstName: user.firstName,
+      lastName:user.lastName,
       userId,
       targetUserId,
       text: newMessage,
     });
-    setNewMessage("")
+    setNewMessage("");
   };
+
   return (
     <div className="w-3/4 mx-auto border border-gray-600 m-5 h-[70vh] flex flex-col">
       <h1 className="p-5 border-b border-gray-600">Chat</h1>
@@ -50,10 +74,10 @@ const Chat = () => {
           return (
             <div
               key={index}
-               className={
+              className={
                 "chat " +
-                (user.firstName === msg.firstName ? "chat-end" : "chat-start")
-              } 
+                (user.firstName === msg.firstName ? "chat-start" : "chat-end")
+              }
             >
               <div className="chat-header">
                 {`${msg.firstName}  ${msg.lastName}`}

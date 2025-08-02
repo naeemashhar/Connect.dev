@@ -52,7 +52,6 @@ const Navbar = () => {
           &lt;&#9679;&gt;
         </span>
         <Link
-          to="/"
           className="ml-2 text-2xl font-semibold text-gray-800 dark:text-white"
         >
           Connect.<span className="text-cyan-600 dark:text-cyan-500">dev</span>

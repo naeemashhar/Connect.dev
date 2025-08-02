@@ -5,7 +5,7 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { createSocketConnection } from "../utils/socket";
 import { addConnections } from "../utils/connectionSlice";
-import { ArrowLeft, Send, UsersRound, X } from "lucide-react";
+import { ArrowLeft, Check, Send, UsersRound, X } from "lucide-react";
 
 const Chat = () => {
   const { targetUserId } = useParams();
@@ -92,15 +92,15 @@ const Chat = () => {
   const targetUser = connections.find((c) => c._id === targetUserId);
 
   return (
-    <div className="w-full flex justify-center">
-      <div className="flex flex-col md:flex-row h-[90vh] m-2 md:m-5 border border-base-300 rounded-lg shadow-xl overflow-hidden w-full max-w-7xl">
+    <div className="w-full flex justify-center bg-radial from-cyan-500/25 to-[#020013]">
+      <div className="flex flex-col md:flex-row h-[90vh] m-2 md:m-5 border border-base-300 rounded-lg shadow-xl overflow-hidden w-full max-w-full">
         {/* Sidebar */}
         <aside
-          className={`w-full md:w-1/3 lg:w-1/4 bg-base-200 p-4 border-b md:border-b-0 md:border-r border-base-300 overflow-y-auto transition-transform duration-300 ease-in-out z-10 md:translate-x-0 ${
+          className={`w-full md:w-1/3 lg:w-1/4 bg-[#020013] p-4 border-b md:border-b-0 md:border-r border-base-300 overflow-y-auto transition-transform duration-300 ease-in-out z-10 md:translate-x-0 ${
             showSidebar ? "translate-x-0" : "-translate-x-full md:translate-x-0"
           } fixed md:static top-0 left-0 h-full md:h-auto`}
         >
-          <div className="flex justify-between items-center mb-4 md:hidden">
+          <div className="flex justify-between items-center mb-4 mt-17 md:hidden">
             <h2 className="text-xl font-semibold">Connections</h2>
             <button
               onClick={() => setShowSidebar(false)}
@@ -193,25 +193,29 @@ const Chat = () => {
                 return (
                   <div
                     key={idx}
-                    className={`chat ${isCurrentUser ? "chat-end" : "chat-start"}`}
+                    className={`chat ${
+                      isCurrentUser ? "chat-end" : "chat-start"
+                    }`}
                   >
                     <div className="chat-image avatar">
                       <div className="w-8 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
                         <img src={avatarUrl} alt="avatar" />
                       </div>
                     </div>
-                    <div className="chat-header text-sm text-base-content/70">
+                    <div className="chat-header text-xs text-base-content/70">
                       {msg.firstName} {msg.lastName}
                     </div>
+                    
                     <div
-                      className={` px-3 py-1 rounded-tl-md rounded-br-md ${
+                      className={`max-w-[100%] md:max-w-[80%] px-3 py-1 rounded-tl-md rounded-br-md ${
                         isCurrentUser
-                          ? "bg-cyan-500 text-gray-100"
-                          : "bg-base-300 text-base-content"
+                          ? "bg-cyan-600 text-gray-100 ml-auto rounded-bl-md"
+                          : "bg-base-300 text-base-content mr-auto rounded-tr-md"
                       }`}
                     >
                       {msg.text}
                     </div>
+                   
                   </div>
                 );
               })
@@ -221,19 +225,19 @@ const Chat = () => {
           </div>
 
           {/* Input */}
-          <div className="p-4 border-t border-base-300 bg-base-100 backdrop-blur-md">
-            <div className="flex items-center gap-2">
+          <div className="p-4 border-t border-base-300 bg-[#020013] backdrop-blur-md">
+            <div className="flex justify-between items-center gap-2">
               <input
                 type="text"
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && sendMessage()}
                 placeholder="Type your message..."
-                className="flex-1 input input-bordered rounded-full bg-base-200 text-base-content focus:outline-none"
+                className="max-w-5xl flex-1 input input-bordered rounded-full bg-base-200 text-base-content focus:outline-none"
               />
               <button
                 onClick={sendMessage}
-                className="btn btn-primary rounded-full px-4 py-2 hover:scale-105 transition"
+                className="btn bg-[#0d1128] rounded-full px-4 py-2 hover:border-2 hover:border-cyan-500 hover:scale-105 transition"
               >
                 <Send size={18} />
               </button>

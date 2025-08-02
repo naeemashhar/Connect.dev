@@ -32,7 +32,7 @@ const PreviewCard = ({ user }) => {
   } = user;
 
   return (
-   <div className="max-w-md w-full bg-white/40 dark:bg-black/30 backdrop-blur-xl px-6 py-13 rounded-3xl shadow-xl text-center border border-cyan-700 dark:border-cyan-500 transition-all duration-300 hover:scale-[1.01]">
+   <div className="max-w-md w-full bg-white/40 dark:bg-black/30 px-6 py-13 rounded-3xl shadow-xl text-center border border-cyan-700 dark:border-cyan-500 transition-all duration-300 hover:scale-[1.01]">
   {/* Profile Image */}
   <div className="w-40 h-40 mx-auto mb-4 transition-all duration-300 ease-in-out group">
     <img

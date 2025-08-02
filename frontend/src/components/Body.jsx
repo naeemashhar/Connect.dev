@@ -10,17 +10,20 @@ import { addUser } from "../utils/userSlice";
 // ❌ No login required
 const PUBLIC_ROUTES = ["/", "/login", "/signup", "/about"];
 
-// ✅ Login required, but no Navbar/Footer
-const FULLSCREEN_ROUTES = ["/connections", "/requests", "/profile", "/premium"];
+// ✅ Login required, but full screen — no Navbar/Footer
+const FULLSCREEN_PREFIXES = ["/connections", "/requests", "/profile", "/premium", "/message"]; // <-- include "/message"
 
 const Body = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+  const pathname = location.pathname;
   const user = useSelector((store) => store.user?.user);
 
-  const isPublicRoute = PUBLIC_ROUTES.includes(location.pathname);
-  const isFullscreenRoute = FULLSCREEN_ROUTES.includes(location.pathname);
+  const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
+  const isFullscreenRoute = FULLSCREEN_PREFIXES.some((prefix) =>
+    pathname.startsWith(prefix)
+  );
 
   const fetchUser = async () => {
     try {
@@ -40,16 +43,13 @@ const Body = () => {
     if (!user && !isPublicRoute) {
       fetchUser();
     }
-  }, [location.pathname]);
+  }, [pathname]);
 
   return (
     <div>
-      {/* ✅ Show navbar only if not fullscreen and not public */}
+      {/* ✅ Only show Navbar/Footer if NOT public AND NOT fullscreen */}
       {!isPublicRoute && !isFullscreenRoute && <Navbar />}
-
       <Outlet />
-
-      {/* ✅ Show footer only if not fullscreen and not public */}
       {!isPublicRoute && !isFullscreenRoute && <Footer />}
     </div>
   );

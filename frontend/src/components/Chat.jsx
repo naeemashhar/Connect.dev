@@ -1,63 +1,87 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { createSocketConnection } from "../utils/socket";
-import { useSelector } from "react-redux";
+import { useEffect, useRef, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
+import { createSocketConnection } from "../utils/socket";
+import { addConnections } from "../utils/connectionSlice";
+import { ArrowLeft, Send, UsersRound, X } from "lucide-react";
 
 const Chat = () => {
   const { targetUserId } = useParams();
-  const [messages, setMessages] = useState([]);
   const user = useSelector((store) => store.user);
   const userId = user?._id;
+  const connections = useSelector((store) => store.connection);
+  const dispatch = useDispatch();
+
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [showSidebar, setShowSidebar] = useState(false);
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const fetchConnections = async () => {
+    const res = await axios.get(BASE_URL + "/user/connections", {
+      withCredentials: true,
+    });
+    dispatch(addConnections(res.data.data));
+  };
 
   const fetchChatMessages = async () => {
+    if (!targetUserId) return;
     const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, {
       withCredentials: true,
     });
-
     const chatMessages = chat?.data?.messages.map((msg) => {
-      const {senderId, text} = msg;
+      const { senderId, text } = msg;
       return {
         firstName: senderId?.firstName,
         lastName: senderId?.lastName,
-        text: msg?.text,
+        text,
       };
     });
-    setMessages(chatMessages)
+    setMessages(chatMessages);
   };
-  useEffect(() => {
-    fetchChatMessages();
-  });
 
   useEffect(() => {
-    if (!userId) {
-      return;
-    }
+    fetchConnections();
+  }, []);
+
+  useEffect(() => {
+    fetchChatMessages();
+  }, [targetUserId]);
+
+  useEffect(() => {
+    if (!userId || !targetUserId) return;
+
     const socket = createSocketConnection();
     socket.emit("joinChat", {
       firstName: user.firstName,
-      lastName:user.lastName,
+      lastName: user.lastName,
       userId,
       targetUserId,
     });
 
-    socket.on("messageReceived", ({ firstName,lastName, text }) => {
-      setMessages((messages) => [...messages, { firstName,lastName, text }]);
+    socket.on("messageReceived", ({ firstName, lastName, text }) => {
+      setMessages((prev) => [...prev, { firstName, lastName, text }]);
     });
 
-    //disconnecting web-socket.io whenever unload
-    return () => {
-      socket.disconnect();
-    };
+    return () => socket.disconnect();
   }, [userId, targetUserId]);
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   const sendMessage = () => {
+    if (!newMessage.trim()) return;
     const socket = createSocketConnection();
     socket.emit("sendMessage", {
       firstName: user.firstName,
-      lastName:user.lastName,
+      lastName: user.lastName,
       userId,
       targetUserId,
       text: newMessage,
@@ -65,40 +89,157 @@ const Chat = () => {
     setNewMessage("");
   };
 
+  const targetUser = connections.find((c) => c._id === targetUserId);
+
   return (
-    <div className="w-3/4 mx-auto border border-gray-600 m-5 h-[70vh] flex flex-col">
-      <h1 className="p-5 border-b border-gray-600">Chat</h1>
-
-      <div className="flex-1 overflow-scroll p-5">
-        {messages.map((msg, index) => {
-          return (
-            <div
-              key={index}
-              className={
-                "chat " +
-                (user.firstName === msg.firstName ? "chat-start" : "chat-end")
-              }
+    <div className="w-full flex justify-center">
+      <div className="flex flex-col md:flex-row h-[90vh] m-2 md:m-5 border border-base-300 rounded-lg shadow-xl overflow-hidden w-full max-w-7xl">
+        {/* Sidebar */}
+        <aside
+          className={`w-full md:w-1/3 lg:w-1/4 bg-base-200 p-4 border-b md:border-b-0 md:border-r border-base-300 overflow-y-auto transition-transform duration-300 ease-in-out z-10 md:translate-x-0 ${
+            showSidebar ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          } fixed md:static top-0 left-0 h-full md:h-auto`}
+        >
+          <div className="flex justify-between items-center mb-4 md:hidden">
+            <h2 className="text-xl font-semibold">Connections</h2>
+            <button
+              onClick={() => setShowSidebar(false)}
+              className="btn btn-ghost btn-sm"
             >
-              <div className="chat-header">
-                {`${msg.firstName}  ${msg.lastName}`}
-                <time className="text-xs opacity-50"> 2 hours ago</time>
-              </div>
-              <div className="chat-bubble">{msg.text}</div>
-              <div className="chat-footer opacity-50">Seen</div>
-            </div>
-          );
-        })}
-      </div>
+              <X className="w-5 h-5" />
+            </button>
+          </div>
 
-      <div className="p-5 border-t border-gray-600 flex items-center gap-2">
-        <input
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          className="flex-1 border border-gray-500 text-white rounded p-2"
-        />
-        <button onClick={sendMessage} className="btn btn-secondary">
-          Send
-        </button>
+          {connections?.length === 0 ? (
+            <p className="text-sm opacity-70">No connections yet.</p>
+          ) : (
+            <ul className="space-y-3">
+              {connections.map((conn) => (
+                <li
+                  key={conn._id}
+                  onClick={() => setShowSidebar(false)}
+                  className={`p-3 rounded-lg cursor-pointer hover:bg-base-300 transition ${
+                    conn._id === targetUserId ? "bg-base-300" : ""
+                  }`}
+                >
+                  <Link
+                    to={`/message/${conn._id}`}
+                    className="flex items-center gap-3"
+                  >
+                    <img
+                      src={conn.photoURL}
+                      className="w-10 h-10 rounded-full object-cover border-2 border-cyan-500"
+                      alt={conn.firstName}
+                    />
+                    <div className="flex flex-col text-sm">
+                      <span className="font-semibold">
+                        {conn.firstName} {conn.lastName}
+                      </span>
+                      <span className="opacity-70 text-xs">{conn.title}</span>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </aside>
+
+        {/* Chat Area */}
+        <main className="flex-1 flex flex-col justify-between min-h-0">
+          {/* Header */}
+          <div className="flex justify-between items-center p-4 border-b border-base-300 bg-base-100 sticky top-0 z-20">
+            <div className="flex items-center gap-3">
+              <Link to={"/connections"}>
+                <ArrowLeft className="w-5 h-5" />
+              </Link>
+              {targetUser ? (
+                <div className="flex items-center gap-3">
+                  <img
+                    src={targetUser.photoURL}
+                    className="w-8 h-8 rounded-full object-cover"
+                    alt={targetUser.firstName}
+                  />
+                  <span className="font-semibold text-base-content">
+                    {targetUser.firstName} {targetUser.lastName}
+                  </span>
+                </div>
+              ) : (
+                <span className="font-semibold text-lg">Back</span>
+              )}
+            </div>
+            <button
+              onClick={() => setShowSidebar(true)}
+              className="btn btn-outline btn-sm md:hidden"
+            >
+              <UsersRound className="w-4 h-4" />
+              <span className="ml-1">Connections</span>
+            </button>
+          </div>
+
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            {messages.length === 0 ? (
+              <p className="text-center text-sm text-base-content/70 mt-10">
+                Start the conversation by sending a message ✨
+              </p>
+            ) : (
+              messages.map((msg, idx) => {
+                const isCurrentUser = user.firstName === msg.firstName;
+                const avatarUrl = isCurrentUser
+                  ? user.photoURL
+                  : connections.find((c) => c.firstName === msg.firstName)
+                      ?.photoURL || "/avatar-placeholder.png";
+
+                return (
+                  <div
+                    key={idx}
+                    className={`chat ${isCurrentUser ? "chat-end" : "chat-start"}`}
+                  >
+                    <div className="chat-image avatar">
+                      <div className="w-8 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                        <img src={avatarUrl} alt="avatar" />
+                      </div>
+                    </div>
+                    <div className="chat-header text-sm text-base-content/70">
+                      {msg.firstName} {msg.lastName}
+                    </div>
+                    <div
+                      className={` px-3 py-1 rounded-tl-md rounded-br-md ${
+                        isCurrentUser
+                          ? "bg-cyan-500 text-gray-100"
+                          : "bg-base-300 text-base-content"
+                      }`}
+                    >
+                      {msg.text}
+                    </div>
+                  </div>
+                );
+              })
+            )}
+
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input */}
+          <div className="p-4 border-t border-base-300 bg-base-100 backdrop-blur-md">
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+                placeholder="Type your message..."
+                className="flex-1 input input-bordered rounded-full bg-base-200 text-base-content focus:outline-none"
+              />
+              <button
+                onClick={sendMessage}
+                className="btn btn-primary rounded-full px-4 py-2 hover:scale-105 transition"
+              >
+                <Send size={18} />
+              </button>
+            </div>
+          </div>
+        </main>
       </div>
     </div>
   );

@@ -13,6 +13,7 @@ import Signup from "./components/Signup";
 import LandingPage from "./components/LandingPage";
 
 import { useEffect, useState } from "react";
+import Chat from "./components/Chat";
 
 const getInitialTheme = () => {
   const savedTheme = localStorage.getItem("theme");
@@ -43,6 +44,7 @@ const App = () => {
               <Route path="/connections" element={<Connections />} />
               <Route path="/requests" element={<Requests />} />
               <Route path="/premium" element={<Premium />} />
+              <Route path="/message/:targetUserId" element={<Chat />} />
             </Route>
           </Routes>
         </BrowserRouter>

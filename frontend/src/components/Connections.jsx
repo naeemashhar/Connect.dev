@@ -5,7 +5,7 @@ import { BASE_URL } from "../utils/constants";
 import { addConnections } from "../utils/connectionSlice";
 import { toast } from "react-toastify";
 import { ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import lightBackground from "/l.png";
 import darkBackground from "/bg-login.png";
@@ -138,13 +138,15 @@ const Connections = () => {
                 )}
 
                 <div className="flex justify-center gap-4 mt-2">
-                  <button
-                    onClick={() => toast.info("💬 Chat feature coming soon!")}
-                    className="btn btn-sm btn-outline border-cyan-500 text-cyan-700 dark:text-cyan-400 hover:bg-cyan-500/10 transition"
-                  >
-                    <i className="ri-chat-1-line mr-1" />
-                    Message
-                  </button>
+                  <Link to={"/message/" + user._id}>
+                    <button
+                      
+                      className="btn btn-sm btn-outline border-cyan-500 text-cyan-700 dark:text-cyan-400 hover:bg-cyan-500/10 transition"
+                    >
+                      <i className="ri-chat-1-line mr-1" />
+                      Message
+                    </button>
+                  </Link>
 
                   <button
                     onClick={() => handleRemove(user._id)}

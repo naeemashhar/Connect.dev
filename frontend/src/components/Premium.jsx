@@ -7,6 +7,7 @@ import darkBackground from "/bg-login.png";
 
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
+import PremiumSuccess from "./PremiumSuccess";
 
 const Premium = () => {
   const navigate = useNavigate();
@@ -24,6 +25,18 @@ const Premium = () => {
     backgroundPosition: "center",
   };
 
+  const [isUserPremium, setIsUserPremium] = useState(false);
+
+  const verifyPremiumUser = async () => {
+    const res = await axios.get(BASE_URL + "/premium/verify", {
+      withCredentials: true,
+    });
+
+    if (res.data.isPremium) {
+      setIsUserPremium(true);
+    }
+  };
+
   const handelBuyClick = async (type) => {
     const order = await axios.post(
       BASE_URL + "/payment/create",
@@ -34,8 +47,8 @@ const Premium = () => {
     );
 
     //open razorpay dialog-box
-     const { amount, keyId, currency, notes, orderId } = order.data;
-     const options = {
+    const { amount, keyId, currency, notes, orderId } = order.data;
+    const options = {
       key: keyId,
       amount,
       currency,
@@ -50,14 +63,16 @@ const Premium = () => {
       theme: {
         color: "#F37254",
       },
-      
+      handler: verifyPremiumUser,
     };
 
     const rzp = new window.Razorpay(options); //get Razorpay from script.js code in html(below title)
     rzp.open();
   };
 
-  return (
+  return isUserPremium ? (
+    <PremiumSuccess />
+  ) : (
     <section
       className="relative py-20 dark:text-white text-[#021431]"
       style={backgroundStyle}

@@ -57,7 +57,7 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
 
     const generatedSignature = crypto
       .createHmac("sha256", webhookSecret)
-      .update(req.body) // raw Buffer
+      .update(req.body)
       .digest("hex");
 
     if (generatedSignature !== signature) {
@@ -65,16 +65,20 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
       return res.status(400).json({ msg: "Webhook signature invalid!" });
     }
 
-    const parsedBody = JSON.parse(req.body); // manually parse
-    if (parsedBody.event === "payment.captured") {
-      const paymentDetails = parsedBody.payload.payment.entity;
+    const parsedBody = JSON.parse(req.body);
+    const event = parsedBody.event;
+    const paymentDetails = parsedBody.payload.payment.entity;
 
-      const payment = await Payment.findOne({
-        orderId: paymentDetails.order_id,
-      });
+    const payment = await Payment.findOne({
+      orderId: paymentDetails.order_id,
+    });
 
-      if (!payment) return res.status(404).json({ msg: "Payment not found" });
+    if (!payment) {
+      return res.status(404).json({ msg: "Payment not found" });
+    }
 
+    // ✅ Set correct status based on event
+    if (event === "payment.captured") {
       payment.status = "captured";
       await payment.save();
 
@@ -84,6 +88,11 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
       await user.save();
 
       console.log("✅ Payment captured and user upgraded");
+    } else if (event === "payment.failed") {
+      payment.status = "failed";
+      await payment.save();
+
+      console.log("❌ Payment failed — status updated in DB");
     }
 
     return res.status(200).json({ msg: "Webhook processed" });

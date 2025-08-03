@@ -12,9 +12,9 @@ import PremiumSuccess from "./PremiumSuccess";
 const Premium = () => {
   const navigate = useNavigate();
   const [isLightMode, setIsLightMode] = useState(true);
-  useEffect(() => {
-    verifyPremiumUser();
-  }, []);
+
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     const theme = localStorage.getItem("theme") || "light";
@@ -31,14 +31,32 @@ const Premium = () => {
   const [isUserPremium, setIsUserPremium] = useState(false);
 
   const verifyPremiumUser = async () => {
-    const res = await axios.get(BASE_URL + "/premium/verify", {
-      withCredentials: true,
-    });
-
-    if (res.data.isPremium) {
-      setIsUserPremium(true);
+    try {
+      const res = await axios.get(`${BASE_URL}/premium/verify`, {
+        withCredentials: true,
+      });
+      if (res.data.isPremium) {
+        setIsUserPremium(true);
+      }
+    } catch (error) {
+      console.error("Error verifying premium:", error);
+    } finally {
+      setLoading(false);
     }
   };
+
+    useEffect(() => {
+    verifyPremiumUser();
+  }, []);
+
+    if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-cyan-500" />
+      </div>
+    );
+  }
+
 
   const handelBuyClick = async (type) => {
     const order = await axios.post(

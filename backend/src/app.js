@@ -25,6 +25,7 @@ app.use(
   })
 );
 app.use(cookieParser()); // Middleware to parse cookies from the request
+app.use("/payment/webhook", express.raw({ type: "application/json" }));
 app.use(express.json()); // Middleware to parse JSON request bodies
 
 app.use("/", authRouter);

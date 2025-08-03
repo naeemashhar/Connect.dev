@@ -8,9 +8,6 @@ const {
 } = require("razorpay/dist/utils/razorpay-utils");
 const User = require("../models/user");
 
-const crypto = require("crypto");
-
-
 const paymentRouter = express.Router();
 
 //creating and order
@@ -52,45 +49,44 @@ paymentRouter.post("/payment/create", userAuth, async (req, res) => {
 });
 
 //creating webhook-api
-
 paymentRouter.post("/payment/webhook", async (req, res) => {
   try {
+    const crypto = require("crypto");
     const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
-    const webhookSignature = req.get("X-Razorpay-Signature");
-    const body = req.body; // raw Buffer
+    const signature = req.get("x-razorpay-signature");
 
-    const expectedSignature = crypto
+    const generatedSignature = crypto
       .createHmac("sha256", webhookSecret)
-      .update(body)
+      .update(req.body) // raw Buffer
       .digest("hex");
 
-    if (expectedSignature !== webhookSignature) {
+    if (generatedSignature !== signature) {
       console.log("❌ Invalid Webhook Signature");
-      return res.status(400).json({ msg: "Webhook signature is invalid!" });
+      return res.status(400).json({ msg: "Webhook signature invalid!" });
     }
 
-    const parsedBody = JSON.parse(body); // Since it's raw, parse manually
-    const paymentDetails = parsedBody.payload.payment.entity;
+    const parsedBody = JSON.parse(req.body); // manually parse
+    if (parsedBody.event === "payment.captured") {
+      const paymentDetails = parsedBody.payload.payment.entity;
 
-    const payment = await Payment.findOne({
-      orderId: paymentDetails.order_id, // ✅ use `order_id` (not `order._id`)
-    });
+      const payment = await Payment.findOne({
+        orderId: paymentDetails.order_id,
+      });
 
-    if (!payment) {
-      return res.status(404).json({ msg: "Payment not found" });
+      if (!payment) return res.status(404).json({ msg: "Payment not found" });
+
+      payment.status = "captured";
+      await payment.save();
+
+      const user = await User.findById(payment.userId);
+      user.isPremium = true;
+      user.membershipType = payment.notes.membershipType;
+      await user.save();
+
+      console.log("✅ Payment captured and user upgraded");
     }
 
-    payment.status = paymentDetails.status;
-    await payment.save();
-
-    const user = await User.findById(payment.userId);
-    user.isPremium = true;
-    user.membershipType = payment.notes.membershipType;
-
-    await user.save();
-
-    console.log("✅ Webhook processed successfully");
-    return res.status(200).json({ msg: "Webhook received successfully!" });
+    return res.status(200).json({ msg: "Webhook processed" });
   } catch (error) {
     console.error("Webhook Error:", error);
     return res.status(500).json({ msg: error.message });

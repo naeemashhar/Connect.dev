@@ -12,6 +12,9 @@ import PremiumSuccess from "./PremiumSuccess";
 const Premium = () => {
   const navigate = useNavigate();
   const [isLightMode, setIsLightMode] = useState(true);
+  useEffect(() => {
+    verifyPremiumUser();
+  }, []);
 
   useEffect(() => {
     const theme = localStorage.getItem("theme") || "light";

@@ -110,6 +110,14 @@ const userSchema = new mongoose.Schema(
       required: true,
       maxlength: 15,
     },
+    isPremium:{
+      type:Boolean,
+      default:false
+    },
+    membershipType:{
+      type:String,
+    },
+    
   },
   {
     timestamps: true,

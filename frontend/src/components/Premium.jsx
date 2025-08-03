@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import lightBackground from "/lg.png";
 import darkBackground from "/bg-login.png";
 
+import axios from "axios";
+import { BASE_URL } from "../utils/constants";
+
 const Premium = () => {
   const navigate = useNavigate();
   const [isLightMode, setIsLightMode] = useState(true);
@@ -19,6 +22,39 @@ const Premium = () => {
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
+  };
+
+  const handelBuyClick = async (type) => {
+    const order = await axios.post(
+      BASE_URL + "/payment/create",
+      {
+        membershipType: type,
+      },
+      { withCredentials: true }
+    );
+
+    //open razorpay dialog-box
+     const { amount, keyId, currency, notes, orderId } = order.data;
+     const options = {
+      key: keyId,
+      amount,
+      currency,
+      name: "Connect.Dev",
+      description: "Made with ❤️ by a developer, for developers.",
+      order_id: orderId,
+      prefill: {
+        name: notes.firstName + " " + notes.lastName,
+        email: notes.emailId,
+        contact: "9999999999",
+      },
+      theme: {
+        color: "#F37254",
+      },
+      
+    };
+
+    const rzp = new window.Razorpay(options); //get Razorpay from script.js code in html(below title)
+    rzp.open();
   };
 
   return (
@@ -54,7 +90,6 @@ const Premium = () => {
 
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-4 md:px-6">
-          
           {/* Silver Membership */}
           <div className="bg-white/30 dark:bg-cyan/5  dark:bg-transparent backdrop-blur-[6px] border border-white/40 dark:border-white/10 rounded-xl p-8 flex flex-col shadow-md hover:shadow-gray-400/30 dark:hover:shadow-gray-500/25 transition">
             <h3 className="text-2xl font-semibold text-[#021431] dark:text-gray-300 mb-2">
@@ -64,7 +99,7 @@ const Premium = () => {
               Ideal for growing developers looking to expand their network.
             </p>
             <div className="text-5xl font-bold mb-6 text-[#021431] dark:text-white">
-              $9
+              ₹199
               <span className="text-lg text-[#6B7280] dark:text-white/60">
                 /mo
               </span>
@@ -96,7 +131,10 @@ const Premium = () => {
               ))}
             </ul>
 
-            <button className="btn w-full bg-[#021431] text-white hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-500">
+            <button
+              onClick={() => handelBuyClick("silver")}
+              className="btn w-full bg-[#021431] text-white hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-500"
+            >
               Choose Silver
             </button>
           </div>
@@ -113,7 +151,7 @@ const Premium = () => {
               Perfect for developers ready to stand out and lead the community.
             </p>
             <div className="text-5xl font-bold mb-6 text-[#021431] dark:text-white">
-              $19
+              ₹799
               <span className="text-lg text-[#6B7280] dark:text-white/60">
                 /mo
               </span>
@@ -146,7 +184,10 @@ const Premium = () => {
               ))}
             </ul>
 
-            <button className="btn w-full bg-yellow-400 text-[#021431] hover:bg-yellow-300 dark:bg-yellow-600 dark:text-white dark:hover:bg-yellow-500">
+            <button
+              onClick={() => handelBuyClick("gold")}
+              className="btn w-full bg-yellow-400 text-[#021431] hover:bg-yellow-300 dark:bg-yellow-600 dark:text-white dark:hover:bg-yellow-500"
+            >
               Go Gold
             </button>
           </div>

@@ -16,6 +16,7 @@ const connectionRouter = require("./routes/connectionRouter");
 const userRouter = require("./routes/userRouter");
 const initializeSocket = require("./utils/socket");
 const chatRouter = require("./routes/chat");
+const paymentRouter = require("./routes/payment");
 
 app.use(
   cors({
@@ -30,6 +31,7 @@ app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", connectionRouter);
 app.use("/", userRouter);
+app.use("/", paymentRouter);
 app.use("/", chatRouter);
 
 const server = http.createServer(app); //socket.io

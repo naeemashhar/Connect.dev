@@ -14,7 +14,7 @@ chatRouter.get("/chat/:targetUserId", userAuth, async (req, res) => {
       },
     }).populate({
         path:"messages.senderId",
-        select:"firstName lastName"
+        select:"firstName lastName isPremium"
     })
     if (!chat) {
       chat = new Chat({

@@ -38,6 +38,8 @@ const EditProfile = ({ user }) => {
   const [skills, setSkills] = useState(user.skills || []);
   const [error, setError] = useState("");
   const [showConfirm, setShowConfirm] = useState(false);
+  const [isPremium, setIsPremium] = useState(user.isPremium || false);
+
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -89,6 +91,7 @@ const EditProfile = ({ user }) => {
           city,
           country,
           skills,
+          isPremium
         },
         { withCredentials: true }
       );
@@ -326,6 +329,7 @@ const EditProfile = ({ user }) => {
           city,
           country,
           skills,
+          isPremium
         }}
       />
     </div>

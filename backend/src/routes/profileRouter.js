@@ -8,6 +8,9 @@ const bcrypt = require("bcrypt");
 const { validateDeleteProfile } = require("../utils/validation");
 const User = require("../models/user");
 
+const User_Safe_Data = "firstName lastName photoURL age gender about skills title city country isPremium";
+
+
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
   try {
     const user = req.user; //user is attached to the request object by the userAuth middleware
@@ -29,9 +32,11 @@ profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
     Object.keys(req.body).forEach((key) => (user[key] = req.body[key]));
     await user.save();
 
+     const safeUser = await User.findById(user._id).select(User_Safe_Data);
+
     res.json({
       message: `${user.firstName}, Your Profile Updated Successfully`,
-      data: user,
+      data: safeUser,
     });
   } catch (error) {
     res.status(400).send("Profile Update Failed : " + error.message);

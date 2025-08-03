@@ -7,6 +7,8 @@ const User = require("../models/user");
 
 const sendEmail = require("../utils/sendEmail");
 
+const User_Safe_Data ="firstName lastName photoURL age gender about skills title city country isPremium";
+
 //to send connection
 connectionRouter.post(
   "/request/send/:status/:toUserId",
@@ -89,7 +91,6 @@ connectionRouter.post(
       const loggedInUser = req.user;
       const { status, requestId } = req.params;
 
-      // Validate status
       const allowedStatus = ["accepted", "rejected"];
       if (!allowedStatus.includes(status)) {
         return res.status(400).json({
@@ -99,7 +100,6 @@ connectionRouter.post(
         });
       }
 
-      // Find the connection request where the logged-in user is the receiver
       const connectionRequest = await ConnectionRequest.findOne({
         _id: requestId,
         toUserId: loggedInUser._id,
@@ -117,17 +117,31 @@ connectionRouter.post(
       if (status === "accepted") {
         connectionRequest.status = "accepted";
         connectionRequest.updatedAt = new Date();
-        const data = await connectionRequest.save();
+        await connectionRequest.save();
+
+        // Determine the connected user's ID
+        const connectedUserId =
+          connectionRequest.fromUserId.toString() ===
+          loggedInUser._id.toString()
+            ? connectionRequest.toUserId
+            : connectionRequest.fromUserId;
+
+        // Fetch connected user's full data
+        const connectedUser = await User.findById(connectedUserId).select(
+          User_Safe_Data
+        );
+
         responseMessage = "User accepted the request";
-        return res.json({ message: responseMessage, data });
+        return res.json({ message: responseMessage, data: connectedUser });
       }
 
-      // If rejected → delete the request
+      // Rejected → delete the request
       await ConnectionRequest.deleteOne({ _id: requestId });
       responseMessage = "User rejected the request";
 
       return res.json({ message: responseMessage });
     } catch (error) {
+      console.error("Review request error:", error);
       res.status(400).send("ERROR: " + error.message);
     }
   }

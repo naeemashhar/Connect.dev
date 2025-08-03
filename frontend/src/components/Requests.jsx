@@ -5,7 +5,7 @@ import { BASE_URL } from "../utils/constants";
 import { addRequests, removeRequest } from "../utils/requestSlice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Verified } from "lucide-react";
 
 const Requests = () => {
   const requests = useSelector((store) => store.request);
@@ -97,7 +97,7 @@ const Requests = () => {
             {requests.map((request) => {
               const user = request.fromUserId;
 
-              if(!user) return null;
+              if (!user) return null;
 
               return (
                 <div
@@ -112,9 +112,18 @@ const Requests = () => {
                   />
 
                   {/* Name + Title */}
-                  <h3 className="text-lg font-bold text-[#021431] dark:text-white">
+                  <p className="text-lg font-bold flex items-center gap-1">
                     {user.firstName} {user.lastName}
-                  </h3>
+                    {user.isPremium && (
+                      <span title="Premium User">
+                        <Verified
+                          className="md:block hidden w-4 h-4 text-blue-500"
+                          strokeWidth={2.5}
+                          title="Premium User"
+                        />
+                      </span>
+                    )}
+                  </p>
                   <p className="text-[#4B5563] dark:text-white/60 text-sm mb-2">
                     {user.title || "No title"}
                   </p>

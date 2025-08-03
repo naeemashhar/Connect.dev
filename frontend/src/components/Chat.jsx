@@ -5,7 +5,7 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { createSocketConnection } from "../utils/socket";
 import { addConnections } from "../utils/connectionSlice";
-import { ArrowLeft, Check, Send, UsersRound, X } from "lucide-react";
+import { ArrowLeft, Check, Send, UsersRound, Verified, X } from "lucide-react";
 
 const Chat = () => {
   const { targetUserId } = useParams();
@@ -20,10 +20,10 @@ const Chat = () => {
   const messagesEndRef = useRef(null);
 
   const [isLightMode, setIsLightMode] = useState(true);
-   useEffect(() => {
-      const theme = localStorage.getItem("theme") || "light";
-      setIsLightMode(theme === "light");
-    }, []);
+  useEffect(() => {
+    const theme = localStorage.getItem("theme") || "light";
+    setIsLightMode(theme === "light");
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -46,6 +46,7 @@ const Chat = () => {
       return {
         firstName: senderId?.firstName,
         lastName: senderId?.lastName,
+        isPremium: senderId?.isPremium,
         text,
       };
     });
@@ -98,11 +99,13 @@ const Chat = () => {
   const targetUser = connections.find((c) => c._id === targetUserId);
 
   return (
-    <div className={`w-full h-fit flex justify-center ${
+    <div
+      className={`w-full h-fit flex justify-center ${
         isLightMode
           ? "bg-radial from-[#feffff] to-[#ccd2dc]"
           : "bg-radial from-cyan-500/25 to-[#020013]"
-      } `}>
+      } `}
+    >
       <div className="flex flex-col md:flex-row h-[90vh] m-2 md:m-5 border border-base-300 rounded-lg shadow-xl overflow-hidden w-full max-w-full">
         {/* Sidebar */}
         <aside
@@ -142,9 +145,16 @@ const Chat = () => {
                       alt={conn.firstName}
                     />
                     <div className="flex flex-col text-sm">
-                      <span className="font-semibold">
+                      <div className="font-semibold flex gap-1 items-center">
                         {conn.firstName} {conn.lastName}
-                      </span>
+                        {conn.isPremium && (
+                          <Verified
+                            className="w-4 h-4 text-blue-500"
+                            strokeWidth={2.5}
+                            title="Premium User"
+                          />
+                        )}
+                      </div>
                       <span className="opacity-70 text-xs">{conn.title}</span>
                     </div>
                   </Link>
@@ -169,9 +179,18 @@ const Chat = () => {
                     className="w-8 h-8 rounded-full object-cover"
                     alt={targetUser.firstName}
                   />
-                  <span className="font-semibold text-base-content">
-                    {targetUser.firstName} {targetUser.lastName}
-                  </span>
+                  <div className="font-semibold text-base-content">
+                    <div className="md:flex  items-center gap-1  font-semibold">
+                       {targetUser.firstName} {targetUser.lastName}
+                      {targetUser.isPremium && (
+                        <Verified
+                          className="md:block hidden w-4 h-4 text-blue-500"
+                          strokeWidth={2.5}
+                          title="Premium User"
+                        />
+                      )}
+                      </div>
+                  </div>
                 </div>
               ) : (
                 <span className="font-semibold text-lg">Back</span>
@@ -212,10 +231,17 @@ const Chat = () => {
                         <img src={avatarUrl} alt="avatar" />
                       </div>
                     </div>
-                    <div className="chat-header text-xs text-base-content/70">
+                    <div className="chat-header text-xs text-base-content/70 flex items-center gap-1">
                       {msg.firstName} {msg.lastName}
+                      {msg.isPremium && (
+                        <Verified
+                          className="w-4 h-4 text-blue-500"
+                          strokeWidth={2.5}
+                          title="Premium User"
+                        />
+                      )}
                     </div>
-                    
+
                     <div
                       className={`max-w-[100%] md:max-w-[80%] px-4 py-2 rounded-tl-md rounded-br-md ${
                         isCurrentUser
@@ -225,7 +251,6 @@ const Chat = () => {
                     >
                       {msg.text}
                     </div>
-                   
                   </div>
                 );
               })

@@ -6,6 +6,7 @@ import { removeUserFromFeed } from "../utils/feedSlice";
 
 import lightBackground from "/l.png";
 import darkBackground from "/bg-login.png";
+import { Verified } from "lucide-react";
 
 const UserCard = ({ user }) => {
   const [hoverAction, setHoverAction] = useState(null);
@@ -16,7 +17,8 @@ const UserCard = ({ user }) => {
   // Listen to data-theme attribute changes on <html>
   useEffect(() => {
     const updateTheme = () => {
-      const theme = document.documentElement.getAttribute("data-theme") || "light";
+      const theme =
+        document.documentElement.getAttribute("data-theme") || "light";
       setIsLightMode(theme === "light");
     };
 
@@ -84,12 +86,11 @@ const UserCard = ({ user }) => {
   ];
 
   const cardStateClass =
-  hoverAction === "interested"
-    ? "rotate-0 sm:rotate-[3deg] border-green-700 sm:shadow-md sm:dark:shadow-green-500 sm:shadow-green-700 dark:border-green-500"
-    : hoverAction === "ignore"
-    ? "rotate-0 sm:-rotate-[3deg] border-red-700 sm:shadow-md sm:dark:shadow-red-500 sm:shadow-red-700 dark:border-red-500"
-    : "rotate-0 border-cyan-500";
-
+    hoverAction === "interested"
+      ? "rotate-0 sm:rotate-[3deg] border-green-700 sm:shadow-md sm:dark:shadow-green-500 sm:shadow-green-700 dark:border-green-500"
+      : hoverAction === "ignore"
+      ? "rotate-0 sm:-rotate-[3deg] border-red-700 sm:shadow-md sm:dark:shadow-red-500 sm:shadow-red-700 dark:border-red-500"
+      : "rotate-0 border-cyan-500";
 
   return (
     <div
@@ -112,12 +113,19 @@ const UserCard = ({ user }) => {
           />
         </div>
 
-        <h2 className="text-xl sm:text-2xl font-semibold">
-          {firstName} {lastName}
-          <span className="ml-2 text-sm text-cyan-500 font-light">
-            ({title || "No Title"})
+        <div className="flex items-center justify-center flex-wrap gap-2 text-center">
+          <h2 className="text-xl sm:text-2xl font-semibold flex items-center gap-1">
+            {user.firstName} {user.lastName}
+            {user.isPremium && (
+              <span title="Premium User">
+                <Verified className="w-4 h-4 text-blue-500" strokeWidth={2.5} />
+              </span>
+            )}
+          </h2>
+          <span className="text-sm text-cyan-500 font-light">
+            ({user.title || "No Title"})
           </span>
-        </h2>
+        </div>
 
         <div className="mt-3 flex flex-wrap justify-center gap-3 text-xs sm:text-sm text-[#4B5563] dark:text-white/60">
           <span className="flex items-center gap-1">

@@ -7,7 +7,8 @@ const User = require("../models/user");
 
 
 const User_Safe_Data =
-  "firstName lastName photoURL age gender about skills title city country";
+  "firstName lastName photoURL age gender about skills title city country isPremium";
+
 
 //get all the pending-connection request for loggedInUser
 userRouter.get("/user/requests/received", userAuth, async (req, res) => {
@@ -94,11 +95,14 @@ userRouter.get("/feed", userAuth, async (req, res) => {
     // user should not see the ignored card
     // user should not see whom he already send interested/connection req to him
     const users = await User.find({
-      $and: [
-        { _id: { $nin: Array.from(hideUserFromFeed) } },
-        { _id: { $ne: loggedInUser._id } },
-      ],
-    }).select(User_Safe_Data).skip(skip).limit(limit);
+  $and: [
+    { _id: { $nin: Array.from(hideUserFromFeed) } },
+    { _id: { $ne: loggedInUser._id } },
+  ],
+})
+  .select(User_Safe_Data) // ✅ this uses isPremium now
+  .skip(skip)
+  .limit(limit);
 
     res.json({users});
 

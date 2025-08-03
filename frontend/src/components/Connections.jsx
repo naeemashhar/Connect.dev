@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../utils/constants";
 import { addConnections } from "../utils/connectionSlice";
 import { toast } from "react-toastify";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Verified } from "lucide-react"; // 👈 add Verified
 import { Link, useNavigate } from "react-router-dom";
 
 import lightBackground from "/l.png";
@@ -26,7 +26,6 @@ const Connections = () => {
     }
   };
 
-  // 🧹 Placeholder function for remove
   const handleRemove = () => {
     toast.info("🧹 Remove feature is coming soon!");
   };
@@ -65,7 +64,6 @@ const Connections = () => {
       <div className="absolute inset-0 bg-white/60 dark:bg-black/40 pointer-events-none z-0" />
 
       <div className="relative z-10 max-w-6xl mx-auto">
-        {/* Back button */}
         <div className="mb-6 lg:mb-0">
           <button
             onClick={() => navigate("/feed")}
@@ -96,9 +94,19 @@ const Connections = () => {
                   alt={user.firstName}
                   className="object-cover w-24 h-24 rounded-full border-2 border-cyan-500 mb-4"
                 />
-                <h3 className="text-lg font-bold text-[#021431] dark:text-white">
+
+                {/* 🟦 Verified name section */}
+                <h3 className="text-lg font-bold text-[#021431] dark:text-white flex items-center justify-center gap-1">
                   {user.firstName} {user.lastName}
+                  {user.isPremium && (
+                    <Verified
+                      className="w-4 h-4 text-blue-500"
+                      strokeWidth={2.5}
+                      title="Premium User"
+                    />
+                  )}
                 </h3>
+
                 <p className="text-[#4B5563] dark:text-white/60 text-sm mb-2">
                   {user.title}
                 </p>
@@ -140,7 +148,6 @@ const Connections = () => {
                 <div className="flex justify-center gap-4 mt-2">
                   <Link to={"/message/" + user._id}>
                     <button
-                      
                       className="btn btn-sm btn-outline border-cyan-500 text-cyan-700 dark:text-cyan-400 hover:bg-cyan-500/10 transition"
                     >
                       <i className="ri-chat-1-line mr-1" />

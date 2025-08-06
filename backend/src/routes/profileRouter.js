@@ -23,9 +23,9 @@ profileRouter.get("/profile/view", userAuth, async (req, res) => {
 
 profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
   try {
-    if (!validateProfileData(req)) {
+    /* if (!validateProfileData(req)) {
       throw new Error("Invalid Edit Request");
-    }
+    } */
 
     const user = req.user; //user is attached to the request object by the userAuth middleware
 

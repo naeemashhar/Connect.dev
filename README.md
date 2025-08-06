@@ -1,54 +1,94 @@
-# Connect.dev 💼🚀
+# 🚀 Connect.dev – Professional Developer Networking Platform
 
-A professional networking platform built specifically for developers to connect, collaborate, and grow together — inspired by Tinder-style interactions but tailored for the dev community.
+Connect.dev is a full-stack MERN application where developers can connect, collaborate, and grow their network in a professional environment.
 
-🌐 **Live Demo**: [connect-dev-frontend.onrender.com](https://connect-dev-frontend.onrender.com/)
-
----
-
-## 🔍 Overview
-
-Connect.dev is a full-stack MERN (MongoDB, Express.js, React.js, Node.js) application that helps developers:
-
-- Discover other developers based on skills and interests
-- Swipe right to express interest, left to skip
-- Connect instantly if there's mutual interest
-- Collaborate professionally through a developer-first interface
+🌐 **Live Demo:** [http://13.48.104.170/](http://13.48.104.170/)  
+🔗 **GitHub Repo:** [https://github.com/naeemashhar/Connect.dev](https://github.com/naeemashhar/Connect.dev)
 
 ---
 
-## ✨ Features
+## 📌 Features
 
-- 👤 **Profile Management** — Create and edit detailed dev profiles with skills, titles, bio, and image URL
-- 🎴 **Tinder-style Feed** — Swipe through developer cards in a clean grid layout
-- 📨 **Requests & Matches** — Manage incoming requests, view matches, and connect
-- 🌗 **Dark/Light Theme Support** — Fully theme-aware using DaisyUI & Tailwind CSS
-- 🔐 **Authentication** — Secure login and signup using JWT and hashed passwords
-- 📱 **Responsive UI** — Fully mobile-optimized with a professional, clean interface
+### 👤 Profile Management
+- Real-time profile editing (name, bio, title, skills, etc.)
+- Upload profile image and update public information
+- View your own connections and pending requests
+
+### 🤝 Connect & Match
+- Swipe-like user feed (Accept / Ignore)
+- Accept or Reject incoming connection requests
+- Track who you matched with on the **Connections** page
+
+### 💬 Chat System
+- 1-on-1 real-time messaging
+- Emoji picker integrated for smoother conversation
+
+### 💳 Premium Plans (Demo)
+- Silver & Gold subscription options using **Razorpay**
+- Premium users are highlighted with plan-specific badges
+
+### 📧 Email Notifications (Amazon SES + Cron)
+- Daily email report of **mutual connection requests**
+- Automated via **Node-Cron**
+- Sent using **Amazon SES** from a verified sender
+- Runs every morning at 8 AM
+
+```js
+cron.schedule("0 8 * * *", async () => {
+  // Checks yesterday’s mutual requests and sends daily summary
+});
+```
 
 ---
 
 ## 🛠️ Tech Stack
 
-### Frontend
-- React.js + Vite
-- Redux Toolkit
-- Tailwind CSS + DaisyUI
-- Lucide Icons
-- GSAP (for animations)
-
-### Backend
-- Node.js + Express.js
-- MongoDB + Mongoose
-- JWT for authentication
-- CORS & cookie-based session management
+| Frontend         | Backend        | Database | DevOps   | Payments | Email |
+|------------------|----------------|----------|----------|----------|-------|
+| React + Vite     | Node.js + Express | MongoDB  | AWS EC2 + Nginx | Razorpay (demo) | Amazon SES + Cron |
 
 ---
 
-## 🚀 Getting Started
+## 📁 Project Structure
 
-### Clone the Repos
+```
+client/         # React frontend with Tailwind + DaisyUI
+server/         # Node.js backend with Express
+models/         # Mongoose schemas
+routes/         # API endpoints (auth, user, chat, etc.)
+utils/          # Helpers for Razorpay, email, cron logic
+```
 
-```bash
-git clone https://github.com/your-username/connect-dev-frontend.git
-git clone https://github.com/your-username/connect-dev-backend.git
+---
+
+## 🔐 Deployment
+
+- App is deployed on **AWS EC2** using **Nginx** for routing
+- React frontend served via Nginx, backend proxied to `/api`
+- Environment variables stored securely on server
+- Email service via **Amazon SES**, requests tracked and dispatched automatically
+
+---
+
+## 🧠 Learning & Credits
+
+This project was a part of my **backend learning journey** inspired by [Akshay Saini](https://www.linkedin.com/in/akshaymarch/) and his course **Namaste Node.js**.
+
+> 🙏 Big thanks to Akshay Saini for teaching core backend concepts and inspiring me to build real-world apps!
+
+---
+
+## 🧑‍💻 Contributing
+
+Planning to open-source parts of this project soon.  
+**Drop a 💬 or DM if you're interested in contributing or learning more about the project structure, logic, or best practices followed!**
+
+---
+
+## 📬 Contact
+
+**Made with 💙 by Naeem Ashhar**  
+📫 Feel free to reach out on LinkedIn or GitHub for questions or collaborations.
+
+---
+

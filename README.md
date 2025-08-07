@@ -70,14 +70,6 @@ utils/          # Helpers for Razorpay, email, cron logic
 
 ---
 
-## 🧠 Learning & Credits
-
-This project was a part of my **backend learning journey** inspired by [Akshay Saini](https://www.linkedin.com/in/akshaymarch/) and his course **Namaste Node.js**.
-
-> 🙏 Big thanks to Akshay Saini for teaching core backend concepts and inspiring me to build real-world apps!
-
----
-
 ## 🧑‍💻 Contributing
 
 Planning to open-source parts of this project soon.  
